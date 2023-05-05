@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Fab, Zoom } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import {Snackbar} from "@mui/base";
+import Alert from "@mui/material/Alert";
 
 function CreateArea(props) {
     const [isExpanded, setExpanded] = useState(false);
+    const [open, setOpen] = useState(false)
 
     const [note, setNote] = useState({
         title: "",
-        content: ""
+        description: ""
     });
 
     function handleChange(event) {
@@ -22,10 +25,14 @@ function CreateArea(props) {
     }
 
     function submitNote(event) {
+        if(!note.title && !note.description){
+            setOpen(true)
+            return
+        }
         props.onAdd(note);
         setNote({
             title: "",
-            content: ""
+            description: ""
         });
         event.preventDefault();
     }
@@ -47,10 +54,10 @@ function CreateArea(props) {
                 )}
 
                 <textarea
-                    name="content"
+                    name="description"
                     onClick={expand}
                     onChange={handleChange}
-                    value={note.content}
+                    value={note.description}
                     placeholder="Take a note..."
                     rows={isExpanded ? 3 : 1}
                 />
@@ -60,6 +67,11 @@ function CreateArea(props) {
                     </Fab>
                 </Zoom>
             </form>
+            <Snackbar open={open} autoHideDuration={6000} onClose={() => setOpen(false)}>
+                <Alert onClose={() => setOpen(false)} severity="error" sx={{ width: '100%' }}>
+                    Title and Description both can't be empty!
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

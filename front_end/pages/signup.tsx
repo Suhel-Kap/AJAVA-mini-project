@@ -40,10 +40,12 @@ export default function Home() {
                     "Content-Type": "application/json"
                 }
             })
+            sessionStorage.setItem("email", form.email)
+            sessionStorage.setItem("loggedIn", res.data.loggedIn)
             router.push("/notes")
         } catch (e){
             console.error(e)
-            if(res.status === 503){
+            if(e.response.status === 503){
                 setPwMatched(false)
                 setAlertMessage("User already exists")
             }
